@@ -1,26 +1,31 @@
 "use client";
 
 import { useState } from "react";
-import { postsService } from "@/services/posts";
+// import { postsService } from "@/services/posts";
+import { useCreatePost } from "@/hooks/use-create-posts";
 
 export function CreatePostForm() {
   const [title, setTitle] = useState("");
-  const [isPending, setIsPending] = useState(false);
-  const [isSuccess, setIsSuccess] = useState(false);
+  
+  // const [isPending, setIsPending] = useState(false);
+  // const [isSuccess, setIsSuccess] = useState(false);
+  const {mutate, isPending, isSuccess} = useCreatePost();
 
   async function submitPost() {
-    setIsPending(true);
-    setIsSuccess(false);
-    try {
-      const data = await postsService.create({ title, body: "Nội dung bài viết" });
-      console.log("Tạo thành công, ID mới là:", data.id);
-      setIsSuccess(true);
-      setTitle("");
-    } catch (error) {
-      console.error("Lỗi:", (error as Error).message);
-    } finally {
-      setIsPending(false);
-    }
+    // setIsPending(true);
+    // setIsSuccess(false);
+    // try {
+    //   const data = await postsService.create({ title, body: "Nội dung bài viết" });
+    //   console.log("Tạo thành công, ID mới là:", data.id);
+    //   setIsSuccess(true);
+    //   setTitle("");
+    // } catch (error) {
+    //   console.error("Lỗi:", (error as Error).message);
+    // } finally {
+    //   setIsPending(false);
+    // }
+    mutate({ title, body: "Nội dung bài viết" });
+    setTitle("");
   }
 
   return (

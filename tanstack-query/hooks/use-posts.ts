@@ -5,6 +5,6 @@ export function usePosts() {
   return useQuery({
     queryKey: ["posts", "list"],
     queryFn: () => postsService.getAll(),
-    staleTime: 5 * 1000 //60s
+    staleTime: 30 * 1000 //60s
   });
 }

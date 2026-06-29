@@ -7,7 +7,6 @@ import { usePostsPagination } from "@/hooks/use-posts-pagination";
 export function PaginationPostList() {
   const [page, setPage] = useState(1);
   const { data, isPending, isPlaceholderData, hasNextPage } = usePostsPagination({ page });
-  console.log("Pagination ", data, isPending, isPlaceholderData, hasNextPage);
 
   if (isPending) <SkeletonCards />;
 

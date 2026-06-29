@@ -13,7 +13,7 @@ export function PostCards({ posts }: { posts: Post[] }) {
           <h2 className="post-card-title">{post.title}</h2>
           <p className="post-card-body">{post.body}</p>
           <div className="post-card-footer">
-            <LikeButton post={post} inline />
+            <LikeButton post={post} />
           </div>
         </article>
       ))}

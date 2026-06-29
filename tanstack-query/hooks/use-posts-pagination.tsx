@@ -8,18 +8,24 @@ export function usePostsPagination({ page }: { page: number }) {
   const queryClient = useQueryClient();
   const query = useQuery({
     queryKey: ["posts", "pagination", page],
-    queryFn: () => postsService.getByPage(page),
+    queryFn: async () => {
+      await new Promise((resolve) => setTimeout(resolve, 1500)); // giả lập để thấy dc placeholderData
+      return postsService.getByPage(page);
+    },
     placeholderData: keepPreviousData, // Trong lúc chờ dữ liệu load thì dùng keepPreData thay thế (giá trị lần fetch trước placeholder)
     staleTime: POSTS_PAGINATION_STALE_TIME,
   });
   const hasNextPage = query.data?.hasNextPage ?? false;
 
-  // fetch next page
+  // Prefetch page tiếp theo để khi bấm "Sau" có thể lấy từ cache.
   useEffect(() => {
     if (!hasNextPage) return;
     queryClient.prefetchQuery({
       queryKey: ["posts", "pagination", page + 1],
-      queryFn: () => postsService.getByPage(page + 1),
+      queryFn: async () => {
+        await new Promise((resolve) => setTimeout(resolve, 1500));
+        return postsService.getByPage(page + 1);
+      },
       staleTime: POSTS_PAGINATION_STALE_TIME,
     });
   }, [page, queryClient, hasNextPage]);

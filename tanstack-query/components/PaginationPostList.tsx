@@ -24,7 +24,6 @@ export function PaginationPostList() {
           className="btn-ghost"
           onClick={() => {
             setPage((p) => Math.max(1, p - 1));
-            // setIsFetching(true);
           }}
           disabled={page === 1}
         >
@@ -36,7 +35,6 @@ export function PaginationPostList() {
           className="btn-ghost"
           onClick={() => {
             setPage((p) => p + 1);
-            // setIsFetching(true);
           }}
           disabled={!hasNextPage || isPlaceholderData}
         >

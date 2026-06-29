@@ -579,20 +579,58 @@ Trong project:
 24. Nếu API trả `{ data, total, hasNextPage }`, nên xử lý shape đó ở service, hook hay component?
 25. Làm sao dùng React Query Devtools để kiểm tra cache?
 
-## Trả Lời Ngắn Gọn Một Số Câu Hay Gặp
+## Gợi Ý Trả Lời Phỏng Vấn
 
-`useQuery` để GET data, `useMutation` để thay đổi data.
+1. TanStack Query giúp quản lý server state trong React: fetch data, cache, loading/error state, refetch, pagination, mutation và đồng bộ UI sau khi dữ liệu thay đổi.
 
-`queryKey` là địa chỉ cache. Key sai hoặc lệch một chữ là cache khác.
+2. `useQuery` dùng để đọc dữ liệu, thường là GET. `useMutation` dùng để thay đổi dữ liệu, thường là POST, PATCH, PUT hoặc DELETE.
 
-`staleTime` không phải thời gian xóa cache. Nó chỉ là thời gian data được xem là fresh.
+3. `queryKey` là định danh của dữ liệu trong cache. Nó phải ổn định vì TanStack Query dựa vào key để biết data nào đang được cache, refetch hoặc update.
 
-`invalidateQueries` không tự sửa data trong cache. Nó đánh dấu data cũ và refetch khi phù hợp.
+4. Nếu hai query có cùng `queryKey`, chúng dùng chung cache. Component sau có thể lấy lại data đã fetch từ component trước.
 
-`setQueryData` sửa cache ngay lập tức, không gọi API.
+5. `staleTime` là thời gian data được xem là fresh. Trong thời gian đó, TanStack Query ít cần refetch lại. Cache còn tồn tại là chuyện khác: data vẫn có thể nằm trong cache dù đã stale.
 
-`keepPreviousData` giúp pagination không bị trắng màn hình khi chuyển trang.
+6. Data đã cache vẫn refetch nếu data bị stale, component mount lại, window focus lại, network reconnect, hoặc bị `invalidateQueries`.
 
-`prefetchQuery` giúp tải trước data để user bấm sang trang sau thấy nhanh hơn.
+7. `isPending` là loading lần đầu khi chưa có data. `isFetching` là đang fetch, kể cả khi đã có data cũ.
 
-`QueryClientProvider` phải bọc app để mọi `useQuery`, `useMutation`, `useQueryClient` dùng chung một cache.
+8. Dùng `placeholderData: keepPreviousData` khi pagination hoặc đổi filter, để giữ data cũ trong lúc data mới đang tải.
+
+9. `isPlaceholderData` cho biết UI đang hiển thị data tạm thời, chưa phải data thật của query key hiện tại.
+
+10. `prefetchQuery` dùng để tải trước data vào cache trước khi user thật sự cần.
+
+11. Vì nếu key khác nhau, prefetch sẽ lưu vào cache khác. Khi `useQuery` chạy với key thật, nó không thấy cache đã prefetch và vẫn request lại.
+
+12. `invalidateQueries` đánh dấu query là stale và cho phép refetch lại. Nó không tự sửa data ngay lập tức.
+
+13. `invalidateQueries({ queryKey: ["posts"] })` ảnh hưởng đến các query có key bắt đầu bằng `["posts"]`, ví dụ `["posts", "list"]` và `["posts", "pagination", 1]`.
+
+14. `setQueryData` update một cache key cụ thể. `setQueriesData` update nhiều cache key khớp điều kiện.
+
+15. Với like một post, nên update cache trực tiếp nếu biết post nào thay đổi, vì tránh refetch toàn bộ list. Nhưng nếu logic phức tạp, invalidate sẽ đơn giản và an toàn hơn.
+
+16. Optimistic update là cập nhật UI trước khi server trả kết quả, để người dùng thấy phản hồi ngay. Nếu server lỗi thì rollback lại.
+
+17. `onSuccess` chạy khi mutation thành công. `onError` chạy khi mutation lỗi. `onSettled` luôn chạy sau mutation, dù thành công hay lỗi.
+
+18. `variables` là tham số đã truyền vào `mutate`. Ví dụ `mutate(true)` thì `variables` là `true`.
+
+19. Tách API ra service layer giúp component sạch hơn, hook dễ đọc hơn, dễ đổi API URL, dễ reuse và type dữ liệu rõ ràng.
+
+20. Tách logic query/prefetch ra custom hook giúp component chỉ lo UI. Logic cache, query key, stale time, prefetch nằm cùng một chỗ dễ bảo trì hơn.
+
+21. Vì `QueryClientProvider` cung cấp `QueryClient` cho toàn app. Không có provider thì `useQuery`, `useMutation`, `useQueryClient` không dùng được cache chung.
+
+22. Dùng `useState(() => new QueryClient())` để tạo `QueryClient` một lần duy nhất, tránh tạo lại mỗi lần render.
+
+23. Mỗi page có một cache key riêng, ví dụ `["posts", "pagination", 1]`, `["posts", "pagination", 2]`. Khi quay lại page cũ, TanStack Query có thể lấy từ cache.
+
+24. Tùy mục đích. Nếu component chỉ cần array thì nên bóc ở service hoặc hook để component dùng `data` đơn giản. Nếu component cần metadata như `total`, `hasNextPage`, thì giữ object `{ data, total, hasNextPage }`.
+
+25. Mở React Query Devtools để xem query key, trạng thái fresh/stale, data đang cache, query nào đang fetching và query nào bị invalidate.
+
+## Câu Tổng Kết Khi Phỏng Vấn
+
+TanStack Query không thay thế API service, mà quản lý server state phía client. Em thường tách API vào service, tách query/mutation vào custom hook, dùng `queryKey` ổn định, set `staleTime` hợp lý, dùng `invalidateQueries` khi cần refetch và `setQueryData` khi muốn update cache trực tiếp.

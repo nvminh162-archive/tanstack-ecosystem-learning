@@ -6,12 +6,12 @@ import { Sidebar } from "@/components/Sidebar";
 export default function Home() {
   return (
     <>
-      <Header/>
+      <Header />
       <div className="blog-container">
         <div className="blog-grid">
           <main>
             <CreatePostForm />
-            <PostList />
+            <PostList paginated />
           </main>
           <Sidebar />
         </div>

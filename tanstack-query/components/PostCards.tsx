@@ -8,7 +8,7 @@ export function PostCards({ posts }: { posts: Post[] }) {
         <article key={post.id} className="post-card">
           <div className="post-card-meta">
             <span className="post-card-badge">#{post.id}</span>
-            <span className="post-card-date">mtikcode</span>
+            <span className="post-card-date">nvminh162</span>
           </div>
           <h2 className="post-card-title">{post.title}</h2>
           <p className="post-card-body">{post.body}</p>

@@ -25,11 +25,11 @@ const BASE = "/api/posts";
 
 // ===== Dịch vụ =====
 export const postsService = {
-  async getAll(): Promise<PaginatedPosts> {
+  async getAll(): Promise<Post[]> {
     const data = await request(BASE, {
       cache: "no-store",
     });
-    return data;
+    return data.data;
   },
 
   async getByPage(page: number): Promise<PaginatedPosts> {

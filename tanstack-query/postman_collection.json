@@ -1,0 +1,237 @@
+{
+  "info": {
+    "_postman_id": "c8d8d6d2-4b9d-4cb7-9d0d-tanstack-query-demo",
+    "name": "TanStack Query Mock API",
+    "description": "Postman collection để test các API mock trong Next.js App Router tại app/api/posts.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:3000",
+      "type": "string"
+    },
+    {
+      "key": "postId",
+      "value": "1",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "Posts",
+      "item": [
+        {
+          "name": "GET /api/posts - Lấy danh sách mặc định",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/posts",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "posts"]
+            },
+            "description": "Lấy danh sách bài viết với phân trang mặc định: page=1, limit=10."
+          },
+          "response": []
+        },
+        {
+          "name": "GET /api/posts?page=1&_limit=10 - Lấy danh sách có phân trang",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/posts?page=1&_limit=10",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "posts"],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1",
+                  "description": "Trang hiện tại."
+                },
+                {
+                  "key": "_limit",
+                  "value": "10",
+                  "description": "Số bài viết mỗi trang."
+                }
+              ]
+            },
+            "description": "API cũng hỗ trợ _page/_limit hoặc page/limit."
+          },
+          "response": []
+        },
+        {
+          "name": "POST /api/posts - Tạo bài viết mới",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Bài viết tạo từ Postman\",\n  \"body\": \"Đây là nội dung test request POST từ Postman.\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/posts",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "posts"]
+            },
+            "description": "Tạo bài viết mới. Response trả về bài viết vừa tạo với status 201."
+          },
+          "response": []
+        },
+        {
+          "name": "POST /api/posts - Tạo bài viết không truyền body",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Bài viết chỉ có title\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/posts",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "posts"]
+            },
+            "description": "Test case body optional. API sẽ tự dùng body mặc định: \"Nội dung tuyệt vời\"."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Post Detail",
+      "item": [
+        {
+          "name": "GET /api/posts/:id - Lấy chi tiết bài viết",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/posts/{{postId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "posts", "{{postId}}"],
+              "variable": [
+                {
+                  "key": "postId",
+                  "value": "{{postId}}",
+                  "description": "ID bài viết cần lấy."
+                }
+              ]
+            },
+            "description": "Lấy chi tiết một bài viết theo id. Nếu không tồn tại, API trả 404."
+          },
+          "response": []
+        },
+        {
+          "name": "GET /api/posts/999999999 - Test 404",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/posts/999999999",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "posts", "999999999"]
+            },
+            "description": "Test response 404 khi bài viết không tồn tại."
+          },
+          "response": []
+        },
+        {
+          "name": "PATCH /api/posts/:id - Like bài viết",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"liked\": true\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/posts/{{postId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "posts", "{{postId}}"],
+              "variable": [
+                {
+                  "key": "postId",
+                  "value": "{{postId}}",
+                  "description": "ID bài viết cần like."
+                }
+              ]
+            },
+            "description": "Cập nhật liked=true. API có cố ý lỗi ngẫu nhiên 25% để demo rollback."
+          },
+          "response": []
+        },
+        {
+          "name": "PATCH /api/posts/:id - Unlike bài viết",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"liked\": false\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/posts/{{postId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "posts", "{{postId}}"],
+              "variable": [
+                {
+                  "key": "postId",
+                  "value": "{{postId}}",
+                  "description": "ID bài viết cần unlike."
+                }
+              ]
+            },
+            "description": "Cập nhật liked=false. API có cố ý lỗi ngẫu nhiên 25% để demo rollback."
+          },
+          "response": []
+        }
+      ]
+    }
+  ]
+}

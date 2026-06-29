@@ -33,7 +33,7 @@ function StaticFeed({ limit }: { limit: number }) {
   return <PostCards posts={data.slice(0, limit)} />;
 }
 
-export function PostList({ paginated = false, limit = 10 }: Props) {
+export function PostList({ paginated = false, limit = 30 }: Props) {
   if (paginated) return <PaginationPostList />;
   return <StaticFeed limit={limit} />;
 }

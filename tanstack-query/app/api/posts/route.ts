@@ -33,7 +33,7 @@ export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
 
   const pageStr = searchParams.get("_page") || searchParams.get("page") || "1";
-  const limitStr = searchParams.get("_limit") || searchParams.get("limit") || "10";
+  const limitStr = searchParams.get("_limit") || searchParams.get("limit") || "30";
 
   const page = parseInt(pageStr);
   const limit = parseInt(limitStr);

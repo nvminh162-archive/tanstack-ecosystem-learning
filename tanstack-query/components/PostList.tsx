@@ -1,4 +1,5 @@
 "use client";
+
 import { useState, useEffect } from "react";
 import { Post, postsService } from "@/services/posts";
 import { SkeletonCards } from "./SkeletonCard";

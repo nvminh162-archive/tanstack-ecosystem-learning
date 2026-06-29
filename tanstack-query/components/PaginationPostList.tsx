@@ -1,6 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
-import { Post, postsService } from "@/services/posts";
+import { postsService } from "@/services/posts";
 import { PostCards } from "./PostCards";
 import { SkeletonCards } from "./SkeletonCard";
 import { useQueryClient } from "@tanstack/react-query";
